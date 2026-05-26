@@ -1,6 +1,7 @@
 package com.ssq.predictor.data.repository
 
 import com.ssq.predictor.data.datasource.AssetDataSource
+import com.ssq.predictor.data.datasource.NetworkDataSource
 import com.ssq.predictor.data.local.dao.DrawDao
 import com.ssq.predictor.data.local.entity.DrawEntity
 import kotlinx.coroutines.flow.Flow
@@ -10,7 +11,8 @@ import javax.inject.Singleton
 @Singleton
 class DrawRepository @Inject constructor(
     private val drawDao: DrawDao,
-    private val assetDataSource: AssetDataSource
+    private val assetDataSource: AssetDataSource,
+    private val networkDataSource: NetworkDataSource
 ) {
     fun getAllDraws(): Flow<List<DrawEntity>> = drawDao.getAllDraws()
 
@@ -24,6 +26,8 @@ class DrawRepository @Inject constructor(
 
     suspend fun insertDraw(draw: DrawEntity) = drawDao.insert(draw)
 
+    suspend fun insertAll(draws: List<DrawEntity>) = drawDao.insertAll(draws)
+
     suspend fun deleteDraw(period: String) = drawDao.deleteByPeriod(period)
 
     suspend fun count(): Int = drawDao.count()
@@ -34,6 +38,20 @@ class DrawRepository @Inject constructor(
             if (history.isNotEmpty()) {
                 drawDao.insertAll(history)
             }
+        }
+    }
+
+    suspend fun syncFromNetwork(): Boolean {
+        return try {
+            val networkDraws = networkDataSource.fetchLatestDraws(30)
+            if (networkDraws.isNotEmpty()) {
+                drawDao.insertAll(networkDraws)
+                true
+            } else {
+                false
+            }
+        } catch (e: Exception) {
+            false
         }
     }
 }

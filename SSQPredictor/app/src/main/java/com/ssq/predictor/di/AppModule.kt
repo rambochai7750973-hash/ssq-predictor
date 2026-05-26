@@ -2,6 +2,7 @@ package com.ssq.predictor.di
 
 import android.content.Context
 import com.ssq.predictor.data.datasource.AssetDataSource
+import com.ssq.predictor.data.datasource.NetworkDataSource
 import com.ssq.predictor.data.local.db.SSQDatabase
 import com.ssq.predictor.data.repository.DrawRepository
 import dagger.Module
@@ -23,8 +24,12 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideDrawRepository(db: SSQDatabase, assetDataSource: AssetDataSource): DrawRepository {
-        return DrawRepository(db.drawDao(), assetDataSource)
+    fun provideDrawRepository(
+        db: SSQDatabase,
+        assetDataSource: AssetDataSource,
+        networkDataSource: NetworkDataSource
+    ): DrawRepository {
+        return DrawRepository(db.drawDao(), assetDataSource, networkDataSource)
     }
 
     @Provides

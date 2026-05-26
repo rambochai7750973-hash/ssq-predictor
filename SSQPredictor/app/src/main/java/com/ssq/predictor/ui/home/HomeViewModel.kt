@@ -12,8 +12,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class HomeUiState(
+    val draws: List<DrawEntity> = emptyList(),
     val latestDraw: DrawEntity? = null,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val networkSynced: Boolean = false
 )
 
 @HiltViewModel
@@ -25,11 +27,27 @@ class HomeViewModel @Inject constructor(
     val uiState: StateFlow<HomeUiState> = _uiState.asStateFlow()
 
     init {
+        loadData()
+    }
+
+    fun refresh() {
+        loadData()
+    }
+
+    private fun loadData() {
         viewModelScope.launch {
             repository.initializeIfEmpty()
             _uiState.value = _uiState.value.copy(isLoading = true)
-            val latest = repository.getLatestDraw()
-            _uiState.value = HomeUiState(latestDraw = latest, isLoading = false)
+
+            val synced = repository.syncFromNetwork()
+            val recentDraws = repository.getRecentDraws(20)
+
+            _uiState.value = HomeUiState(
+                draws = recentDraws,
+                latestDraw = recentDraws.firstOrNull(),
+                isLoading = false,
+                networkSynced = synced
+            )
         }
     }
 }
