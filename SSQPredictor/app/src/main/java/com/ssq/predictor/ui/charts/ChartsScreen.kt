@@ -15,6 +15,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -23,7 +24,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun ChartsScreen(viewModel: ChartsViewModel = hiltViewModel()) {
-    val uiState by viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
 
     LazyColumn(
         modifier = Modifier

@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +43,7 @@ import com.ssq.predictor.ui.components.ScoreBar
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PredictionScreen(viewModel: PredictionViewModel = hiltViewModel()) {
-    val uiState by viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
 
     Column(
         modifier = Modifier
