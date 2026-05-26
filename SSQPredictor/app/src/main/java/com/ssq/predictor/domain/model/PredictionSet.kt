@@ -25,5 +25,6 @@ enum class ReasonType(val label: String) {
     MARKOV("马尔可夫"),
     DISTRIBUTION("分布均衡"),
     RANDOM("随机"),
-    ENSEMBLE("综合")
+    ENSEMBLE("综合"),
+    BIG_DATA("大数据")
 }

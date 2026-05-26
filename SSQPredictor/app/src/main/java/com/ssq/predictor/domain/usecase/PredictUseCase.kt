@@ -3,6 +3,7 @@ package com.ssq.predictor.domain.usecase
 import com.ssq.predictor.data.local.entity.DrawEntity
 import com.ssq.predictor.data.repository.DrawRepository
 import com.ssq.predictor.domain.algorithm.BasePredictor
+import com.ssq.predictor.domain.algorithm.BigDataPredictor
 import com.ssq.predictor.domain.algorithm.DistributionPredictor
 import com.ssq.predictor.domain.algorithm.EnsemblePredictor
 import com.ssq.predictor.domain.algorithm.HotColdPredictor
@@ -20,14 +21,16 @@ class PredictUseCase @Inject constructor(
     private val omissionPredictor: OmissionPredictor,
     private val markovPredictor: MarkovPredictor,
     private val distributionPredictor: DistributionPredictor,
-    private val ensemblePredictor: EnsemblePredictor
+    private val ensemblePredictor: EnsemblePredictor,
+    private val bigDataPredictor: BigDataPredictor
 ) {
     private val predictors: Map<String, BasePredictor> = mapOf(
         hotColdPredictor.name to hotColdPredictor,
         omissionPredictor.name to omissionPredictor,
         markovPredictor.name to markovPredictor,
         distributionPredictor.name to distributionPredictor,
-        ensemblePredictor.name to ensemblePredictor
+        ensemblePredictor.name to ensemblePredictor,
+        bigDataPredictor.name to bigDataPredictor
     )
 
     fun getAlgorithmNames(): List<String> = predictors.keys.toList()
