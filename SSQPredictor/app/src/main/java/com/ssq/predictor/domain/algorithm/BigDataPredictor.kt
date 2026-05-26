@@ -41,9 +41,9 @@ class BigDataPredictor @Inject constructor() : BasePredictor() {
         val avgOmission = redRange.map { omissionMap[it]!! }.average().coerceAtLeast(1.0)
 
         val redScore = redRange.associateWith { n ->
-            val sf = norm(shortFreq[n] ?: 0.0, shortFreq) * 3.0
-            val mf = norm(midFreq[n] ?: 0.0, midFreq) * 2.0
-            val lf = norm(longFreq[n] ?: 0.0, longFreq) * 0.8
+            val sf = norm(shortFreq[n]?.toDouble() ?: 0.0, shortFreq) * 3.0
+            val mf = norm(midFreq[n]?.toDouble() ?: 0.0, midFreq) * 2.0
+            val lf = norm(longFreq[n]?.toDouble() ?: 0.0, longFreq) * 0.8
             val om = (omissionMap[n]!! / avgOmission).coerceIn(0.0, 3.0) * 2.5
             val ps = calcPositionScore(n, posMatrix) * 1.5
             val pr = calcPairScore(n, pairMatrix) * 1.2
