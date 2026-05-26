@@ -1,0 +1,3 @@
+-keepattributes *Annotation*
+-keep class com.ssq.predictor.data.local.entity.** { *; }
+-keep class com.ssq.predictor.domain.model.** { *; }
