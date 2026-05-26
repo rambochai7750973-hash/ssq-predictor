@@ -108,7 +108,8 @@ fun PredictionScreen(viewModel: PredictionViewModel = hiltViewModel()) {
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        uiState.error?.let { error ->
+        val error = uiState.error
+        if (error != null) {
             Text(
                 text = error,
                 color = MaterialTheme.colorScheme.error,
@@ -117,7 +118,8 @@ fun PredictionScreen(viewModel: PredictionViewModel = hiltViewModel()) {
             Spacer(modifier = Modifier.height(8.dp))
         }
 
-        uiState.result?.let { result ->
+        val result = uiState.result
+        if (result != null) {
             Text(
                 text = "算法: ${result.algorithmName}",
                 style = MaterialTheme.typography.titleMedium
@@ -181,8 +183,7 @@ private fun PredictionGroupCard(group: PredictionGroup) {
                         text = reason.reason,
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onSecondaryContainer,
-                        modifier = Modifier
-                            .padding(2.dp)
+                        modifier = Modifier.padding(2.dp)
                     )
                 }
             }

@@ -8,7 +8,6 @@ import com.ssq.predictor.domain.model.PredictionSet
 import com.ssq.predictor.domain.model.ReasonType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.TreeSet
 import javax.inject.Inject
 import kotlin.math.pow
 import kotlin.random.Random
@@ -44,12 +43,12 @@ class HotColdPredictor @Inject constructor() : BasePredictor() {
         val groups = (1..groupCount).map { i ->
             val selected = selectRedGroup(ranked, filterConfig, i)
             val blue = selectHotBlue(sorted, filterConfig)
-            val score = ((selected.sumOf { ranked[it]!! } / ranked.first().value / 6) * 100)
+            val score = ((selected.sumOf { combined[it]!! } / ranked.first().value / 6) * 100)
                 .toInt().coerceIn(0, 100)
             val reasons = selected.map { num ->
                 BallReason(
                     number = num,
-                    reason = if (ranked[num]!! > combined.values.average()) "热号" else "温号",
+                    reason = if (combined[num]!! > combined.values.average()) "热号" else "温号",
                     type = ReasonType.HOT
                 )
             }

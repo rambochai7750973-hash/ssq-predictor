@@ -23,7 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -65,6 +64,7 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
 
 @Composable
 private fun LatestDrawCard(draw: com.ssq.predictor.data.local.entity.DrawEntity) {
+    val reds = listOf(draw.red1, draw.red2, draw.red3, draw.red4, draw.red5, draw.red6)
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(16.dp),
@@ -91,7 +91,6 @@ private fun LatestDrawCard(draw: com.ssq.predictor.data.local.entity.DrawEntity)
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
             ) {
-                val reds = listOf(draw.red1, draw.red2, draw.red3, draw.red4, draw.red5, draw.red6)
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                     items(reds) { red ->
                         BallView(number = red, isRed = true)
@@ -103,11 +102,7 @@ private fun LatestDrawCard(draw: com.ssq.predictor.data.local.entity.DrawEntity)
 
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = "和值: ${reds.sumOf { it } + draw.blue}  |  跨度: ${
-                    listOf(draw.red1, draw.red2, draw.red3, draw.red4, draw.red5, draw.red6).let {
-                        it.max() - it.min()
-                    }
-                }",
+                text = "和值: ${reds.sum() + draw.blue}  |  跨度: ${reds.max() - reds.min()}",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

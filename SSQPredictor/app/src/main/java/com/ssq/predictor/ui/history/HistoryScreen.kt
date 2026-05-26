@@ -84,11 +84,11 @@ private fun HistoryCard(draw: com.ssq.predictor.data.local.entity.DrawEntity) {
                 val reds = listOf(draw.red1, draw.red2, draw.red3, draw.red4, draw.red5, draw.red6)
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
                     items(reds) { red ->
-                        BallView(number = red, isRed = true, size = 32)
+                        BallView(number = red, isRed = true, size = 32.dp)
                     }
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                BallView(number = draw.blue, isRed = false, size = 32)
+                Spacer(modifier = Modifier.width(8.dp))
+                BallView(number = draw.blue, isRed = false, size = 32.dp)
             }
 
             val sum = listOf(draw.red1, draw.red2, draw.red3, draw.red4, draw.red5, draw.red6).sum() + draw.blue

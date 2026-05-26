@@ -1,14 +1,15 @@
 package com.ssq.predictor.ui.charts
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -24,25 +25,29 @@ import androidx.hilt.navigation.compose.hiltViewModel
 fun ChartsScreen(viewModel: ChartsViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(16.dp)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        Text(
-            text = "图表分析",
-            style = MaterialTheme.typography.headlineMedium,
-            fontWeight = FontWeight.Bold
-        )
+        item {
+            Text(
+                text = "图表分析",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold
+            )
+        }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OmissionChartCard(title = "红球遗漏统计", data = uiState.redOmissions)
-        Spacer(modifier = Modifier.height(12.dp))
-        OmissionChartCard(title = "蓝球遗漏统计", data = uiState.blueOmissions)
-        Spacer(modifier = Modifier.height(12.dp))
-        FrequencyChartCard(title = "红球出现频率", data = uiState.redFrequency)
+        item {
+            OmissionChartCard(title = "红球遗漏统计", data = uiState.redOmissions)
+        }
+        item {
+            OmissionChartCard(title = "蓝球遗漏统计", data = uiState.blueOmissions)
+        }
+        item {
+            FrequencyChartCard(title = "红球出现频率", data = uiState.redFrequency)
+        }
     }
 }
 
@@ -61,9 +66,7 @@ private fun OmissionChartCard(title: String, data: Map<Int, Int>) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             if (data.isNotEmpty()) {
-                val maxVal = data.values.maxOrNull()?.toFloat() ?: 1f
                 data.entries.sortedBy { it.key }.forEach { (num, omission) ->
-                    val fraction = omission.toFloat() / maxVal
                     Text(
                         text = "号码 $num: 遗漏 $omission 期",
                         style = MaterialTheme.typography.bodySmall,
@@ -96,9 +99,7 @@ private fun FrequencyChartCard(title: String, data: Map<Int, Int>) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             if (data.isNotEmpty()) {
-                val maxVal = data.values.maxOrNull()?.toFloat() ?: 1f
                 data.entries.sortedBy { it.key }.take(10).forEach { (num, freq) ->
-                    val fraction = freq.toFloat() / maxVal
                     Text(
                         text = "号码 $num: 出现 $freq 次",
                         style = MaterialTheme.typography.bodySmall,
