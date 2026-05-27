@@ -2,6 +2,8 @@ package com.ssq.predictor.ui.prediction
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ssq.predictor.data.local.entity.PredictionRecordEntity
+import com.ssq.predictor.data.repository.PredictionRepository
 import com.ssq.predictor.domain.model.FilterConfig
 import com.ssq.predictor.domain.model.PredictionSet
 import com.ssq.predictor.domain.usecase.PredictUseCase
@@ -18,12 +20,14 @@ data class PredictionUiState(
     val result: PredictionSet? = null,
     val isLoading: Boolean = false,
     val error: String? = null,
-    val filterConfig: FilterConfig = FilterConfig()
+    val filterConfig: FilterConfig = FilterConfig(),
+    val historyRecords: List<PredictionRecordEntity> = emptyList()
 )
 
 @HiltViewModel
 class PredictionViewModel @Inject constructor(
-    private val predictUseCase: PredictUseCase
+    private val predictUseCase: PredictUseCase,
+    private val predictionRepository: PredictionRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(PredictionUiState())
@@ -34,6 +38,15 @@ class PredictionViewModel @Inject constructor(
             algorithms = predictUseCase.getAlgorithmNames(),
             selectedAlgorithm = predictUseCase.getAlgorithmNames().firstOrNull() ?: ""
         )
+        loadHistory()
+    }
+
+    private fun loadHistory() {
+        viewModelScope.launch {
+            predictionRepository.getAllRecords().collect { records ->
+                _uiState.value = _uiState.value.copy(historyRecords = records)
+            }
+        }
     }
 
     fun selectAlgorithm(name: String) {
@@ -52,6 +65,7 @@ class PredictionViewModel @Inject constructor(
                     filterConfig = state.filterConfig
                 )
                 _uiState.value = _uiState.value.copy(result = result, isLoading = false)
+                savePredictionResult(result)
             } catch (e: Exception) {
                 _uiState.value = _uiState.value.copy(
                     isLoading = false,
@@ -59,6 +73,27 @@ class PredictionViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private suspend fun savePredictionResult(result: PredictionSet) {
+        val batchId = System.currentTimeMillis()
+        val records = result.groups.map { group ->
+            val sortedReds = group.reds.sorted()
+            PredictionRecordEntity(
+                batchId = batchId,
+                algorithmName = result.algorithmName,
+                red1 = sortedReds[0],
+                red2 = sortedReds[1],
+                red3 = sortedReds[2],
+                red4 = sortedReds[3],
+                red5 = sortedReds[4],
+                red6 = sortedReds[5],
+                blue = group.blue,
+                score = group.score,
+                timestamp = batchId
+            )
+        }
+        predictionRepository.savePredictionBatch(records)
     }
 
     fun updateFilter(filter: FilterConfig) {

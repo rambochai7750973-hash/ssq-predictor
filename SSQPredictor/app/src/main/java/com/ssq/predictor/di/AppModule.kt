@@ -5,6 +5,7 @@ import com.ssq.predictor.data.datasource.AssetDataSource
 import com.ssq.predictor.data.datasource.NetworkDataSource
 import com.ssq.predictor.data.local.db.SSQDatabase
 import com.ssq.predictor.data.repository.DrawRepository
+import com.ssq.predictor.data.repository.PredictionRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,6 +31,14 @@ object AppModule {
         networkDataSource: NetworkDataSource
     ): DrawRepository {
         return DrawRepository(db.drawDao(), assetDataSource, networkDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun providePredictionRepository(
+        db: SSQDatabase
+    ): PredictionRepository {
+        return PredictionRepository(db.predictionRecordDao())
     }
 
     @Provides

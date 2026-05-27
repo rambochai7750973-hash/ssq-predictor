@@ -5,12 +5,19 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.ssq.predictor.data.local.dao.DrawDao
+import com.ssq.predictor.data.local.dao.PredictionRecordDao
 import com.ssq.predictor.data.local.entity.DrawEntity
+import com.ssq.predictor.data.local.entity.PredictionRecordEntity
 
-@Database(entities = [DrawEntity::class], version = 1, exportSchema = false)
+@Database(
+    entities = [DrawEntity::class, PredictionRecordEntity::class],
+    version = 2,
+    exportSchema = false
+)
 abstract class SSQDatabase : RoomDatabase() {
 
     abstract fun drawDao(): DrawDao
+    abstract fun predictionRecordDao(): PredictionRecordDao
 
     companion object {
         @Volatile
