@@ -1,6 +1,7 @@
 package com.ssq.predictor.ui.simulation
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -60,12 +61,16 @@ fun SimulationScreen(viewModel: SimulationViewModel = hiltViewModel()) {
 
         if (uiState.isLoading) {
             item {
-                CircularProgressIndicator(
-                    modifier = Modifier
-                        .padding(32.dp)
-                        .size(48.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
+                Box(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .padding(32.dp)
+                            .size(48.dp)
+                    )
+                }
             }
         } else if (!uiState.hasRecords) {
             item {
@@ -228,6 +233,7 @@ private fun BatchCard(batch: SimulationBatchResult) {
 
 @Composable
 private fun SimulationGroupRow(index: Int, group: SimulationGroupResult) {
+    val bestPrize = group.bestPrize
     Column(modifier = Modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -247,13 +253,14 @@ private fun SimulationGroupRow(index: Int, group: SimulationGroupResult) {
             Spacer(modifier = Modifier.width(4.dp))
             BallView(number = group.blue, isRed = false, size = 28.dp)
             Spacer(modifier = Modifier.width(4.dp))
-            if (group.bestPrize != null) {
-                ScoreBar(score = group.bestPrize.amount)
+            if (bestPrize != null) {
+                ScoreBar(score = bestPrize.amount)
             }
         }
-        if (group.bestPrize != null) {
+        if (bestPrize != null) {
+            val firstMatch = group.matches.firstOrNull()
             Text(
-                text = "${group.bestPrize.label} - 奖金 ${group.bestPrize.amount}元 (${group.matches.firstOrNull()?.period ?: ""} ${group.matches.firstOrNull()?.date ?: ""})",
+                text = "${bestPrize.label} - 奖金 ${bestPrize.amount}元 (${firstMatch?.period ?: ""} ${firstMatch?.date ?: ""})",
                 style = MaterialTheme.typography.labelSmall,
                 color = MaterialTheme.colorScheme.primary,
                 modifier = Modifier.padding(start = 28.dp, top = 2.dp)
