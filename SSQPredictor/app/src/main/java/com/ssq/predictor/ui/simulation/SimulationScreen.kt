@@ -59,6 +59,19 @@ fun SimulationScreen(viewModel: SimulationViewModel = hiltViewModel()) {
             )
         }
 
+        val error = uiState.error
+        if (error != null) {
+            item {
+                Text(
+                    text = error,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(16.dp),
+                    textAlign = TextAlign.Center
+                )
+            }
+        }
+
         if (uiState.isLoading) {
             item {
                 Box(
@@ -72,7 +85,9 @@ fun SimulationScreen(viewModel: SimulationViewModel = hiltViewModel()) {
                     )
                 }
             }
-        } else if (!uiState.hasRecords) {
+        }
+
+        if (!uiState.isLoading && !uiState.hasRecords) {
             item {
                 Text(
                     text = "暂无预测记录，请先在预测页面生成预测",
@@ -82,7 +97,9 @@ fun SimulationScreen(viewModel: SimulationViewModel = hiltViewModel()) {
                     textAlign = TextAlign.Center
                 )
             }
-        } else {
+        }
+
+        if (!uiState.isLoading && uiState.hasRecords && uiState.result != null) {
             val result = uiState.result ?: return@LazyColumn
 
             item {

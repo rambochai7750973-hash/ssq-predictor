@@ -70,6 +70,10 @@ fun HomeScreen(viewModel: HomeViewModel = hiltViewModel()) {
                 Spacer(modifier = Modifier.height(12.dp))
             }
 
+            item {
+                DrawCountdownCard()
+            }
+
             val recentDraws = uiState.draws
             if (recentDraws.isNotEmpty()) {
                 item {
