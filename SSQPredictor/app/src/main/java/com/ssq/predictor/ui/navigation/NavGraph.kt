@@ -2,6 +2,7 @@ package com.ssq.predictor.ui.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ShowChart
 import androidx.compose.material.icons.filled.Casino
@@ -26,15 +27,17 @@ import com.ssq.predictor.ui.prediction.PredictionScreen
 
 import com.ssq.predictor.ui.charts.ChartsScreen
 import com.ssq.predictor.ui.settings.SettingsScreen
+import com.ssq.predictor.ui.simulation.SimulationScreen
 
 sealed class Screen(val route: String, val label: String, val icon: ImageVector) {
     data object Home : Screen("home", "首页", Icons.Default.Home)
     data object Prediction : Screen("prediction", "预测", Icons.Default.Casino)
+    data object Simulation : Screen("simulation", "模拟", Icons.Default.Analytics)
     data object Charts : Screen("charts", "图表", Icons.Default.ShowChart)
     data object Settings : Screen("settings", "设置", Icons.Default.Settings)
 }
 
-private val bottomNavItems = listOf(Screen.Home, Screen.Prediction, Screen.Charts, Screen.Settings)
+private val bottomNavItems = listOf(Screen.Home, Screen.Prediction, Screen.Simulation, Screen.Charts, Screen.Settings)
 
 @Composable
 fun NavGraph() {
@@ -71,6 +74,7 @@ fun NavGraph() {
         ) {
             composable(Screen.Home.route) { HomeScreen() }
             composable(Screen.Prediction.route) { PredictionScreen() }
+            composable(Screen.Simulation.route) { SimulationScreen() }
             composable(Screen.Charts.route) { ChartsScreen() }
             composable(Screen.Settings.route) { SettingsScreen() }
         }

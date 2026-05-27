@@ -9,13 +9,13 @@ data class PrizeResult(
     val prizeLevel: PrizeLevel?
 )
 
-enum class PrizeLevel(val label: String) {
-    FIRST("一等奖 (6+1)"),
-    SECOND("二等奖 (6+0)"),
-    THIRD("三等奖 (5+1)"),
-    FOURTH("四等奖 (5+0 或 4+1)"),
-    FIFTH("五等奖 (4+0 或 3+1)"),
-    SIXTH("六等奖 (2+1 或 1+1 或 0+1)")
+enum class PrizeLevel(val label: String, val amount: Int) {
+    FIRST("一等奖 (6+1)", 5000000),
+    SECOND("二等奖 (6+0)", 100000),
+    THIRD("三等奖 (5+1)", 3000),
+    FOURTH("四等奖 (5+0 或 4+1)", 200),
+    FIFTH("五等奖 (4+0 或 3+1)", 10),
+    SIXTH("六等奖 (2+1 或 1+1 或 0+1)", 5)
 }
 
 @Singleton
